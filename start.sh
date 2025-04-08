@@ -16,7 +16,7 @@ tmux send 'cd middleware/SSR-master-server-main' ENTER
 tmux send 'node app.js 3001' ENTER
 tmux send 'cd -' ENTER
 
-systemctl restart haproxy
+systemctl restart haproxy mosquitto
 
 curl http://10.100.0.119:5000/ >/dev/null
 curl http://10.100.0.119:5000/ >/dev/null
