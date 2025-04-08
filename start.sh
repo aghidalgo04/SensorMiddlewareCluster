@@ -1,16 +1,26 @@
 #!/bin/sh
+
+tmux kill-session -t start
 set -e
 
-cd ra/middleware/SSR-master-server-main
-node app.js 3000 &
-node app.js 3001 &
-cd -
+tmux new-session -d -s start
+tmux split-window -t start -v
+
+tmux select-pane -t 0
+tmux send 'cd middleware/SSR-master-server-main' ENTER
+tmux send 'node app.js 3000' ENTER
+tmux send 'cd -' ENTER
+
+tmux select-pane -t 1
+tmux send 'cd middleware/SSR-master-server-main' ENTER
+tmux send 'node app.js 3001' ENTER
+tmux send 'cd -' ENTER
 
 systemctl restart haproxy
 
-curl http://10.100.0.119:5000/
-curl http://10.100.0.119:5000/
+curl http://10.100.0.119:5000/ >/dev/null
+curl http://10.100.0.119:5000/ >/dev/null
 
-wait
-kill %1
-kill %2
+tmux attach-session -t start
+
+tmux kill-session -t start
