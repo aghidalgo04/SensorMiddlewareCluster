@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/record', function(req, res, next) {
 	
-  res.send("Saving: "+req.query.id_nodo+';'+now.getTime()+";"+req.query.temperatura+";"+req.query.humedad+";"+req.query.co2+";"+req.query.volatiles+" in: "+logfile_name);
+  res.send("Saving: "+req.query.id_nodo+";"+req.query.temperatura+";"+req.query.humedad+";"+req.query.co2+";"+req.query.volatiles+" in: "+logfile_name);
   var datos = { "id": req.query.id_nodo,
                 "temperatura": req.query.temperatura,
                 "humedad": req.query.humedad,
