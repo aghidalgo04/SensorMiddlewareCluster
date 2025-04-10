@@ -7,7 +7,7 @@ var crypto = require('crypto');
 var { Buffer } = require('node:buffer');
 var mqtt = require('mqtt');
 
-var cliente_mqtt = mqtt.connect("http://138.100.156.203:1883");
+var cliente_mqtt = mqtt.connect("http://10.100.0.119:1883");
 
 
 
@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/record', function(req, res, next) {
 	
-  res.send("Saving: "+req.query.id_nodo+";"+req.query.temperatura+";"+req.query.humedad+";"+req.query.co2+";"+req.query.volatiles+" in: "+logfile_name);
+  res.send("Saving...");
   var datos = { "id": req.query.id_nodo,
                 "temperatura": req.query.temperatura,
                 "humedad": req.query.humedad,
