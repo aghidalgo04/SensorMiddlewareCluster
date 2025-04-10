@@ -5,6 +5,9 @@ var requestStats = require("request-stats")
 
 var crypto = require('crypto');
 var { Buffer } = require('node:buffer');
+var mqtt = require('mqtt');
+
+var cliente_mqtt = mqtt.connect("http://138.100.156.203:1883");
 
 
 
@@ -30,13 +33,14 @@ fs.stat(logfile_name, function(err, stat) {
     } else {
         console.log('Some other error: ', err.code);
     }
-});
-
+})
 
 
 
   //res.render('index', { title: 'Express' });
   res.send("Saving: "+req.query.id_nodo+';'+now.getTime()+";"+req.query.temperatura+";"+req.query.humedad+";"+req.query.co2+";"+req.query.volatiles+" in: "+logfile_name);
+
+  cliente_mqtt.publish("node/"+ req.query.id_nodo , "Saving: "+req.query.id_nodo+';'+now.getTime()+";"+req.query.temperatura+";"+req.query.humedad+";"+req.query.co2+";"+req.query.volatiles+" in: "+logfile_name);
 });
 
 router.post("/record", function(peticion, respuesta) {
