@@ -17,30 +17,14 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/record', function(req, res, next) {
-	var now = new Date();
-var logfile_name = __dirname+'/../public/logs/' +req.query.id_nodo+ "-"+ now.getFullYear() + "-"+ now.getMonth() + "-" + now.getDate() +'.csv'
-
-fs.stat(logfile_name, function(err, stat) {
-    if(err == null) {
-        console.log('File %s exists', logfile_name);
-		let content = req.query.id_nodo+';'+now.getTime()+";"+req.query.temperatura+";"+req.query.humedad+";"+req.query.co2+";"+req.query.volatiles+"\r\n";
-		append2file(logfile_name, content);
-		
-    } else if(err.code === 'ENOENT') {
-        // file does not exist
-	let content ='id_nodo; timestamp; temperatura; humedad; CO2; volatiles\r\n'+req.query.id_nodo+';'+now.getTime()+";"+req.query.temperatura+";"+req.query.humedad+";"+req.query.co2+";"+req.query.volatiles+"\r\n";
-       append2file(logfile_name, content);
-    } else {
-        console.log('Some other error: ', err.code);
-    }
-})
-
-
-
-  //res.render('index', { title: 'Express' });
+	
   res.send("Saving: "+req.query.id_nodo+';'+now.getTime()+";"+req.query.temperatura+";"+req.query.humedad+";"+req.query.co2+";"+req.query.volatiles+" in: "+logfile_name);
-
-  cliente_mqtt.publish("node/"+ req.query.id_nodo , "Saving: "+req.query.id_nodo+';'+now.getTime()+";"+req.query.temperatura+";"+req.query.humedad+";"+req.query.co2+";"+req.query.volatiles+" in: "+logfile_name);
+  var datos = { "id": req.query.id_nodo,
+                "temperatura": req.query.temperatura,
+                "humedad": req.query.humedad,
+                "co2": req.query.co2,
+                "volatiles": req.query.volatiles};
+  cliente_mqtt.publish("node/"+ req.query.id_nodo , JSON.stringify(datos));
 });
 
 router.post("/record", function(peticion, respuesta) {
