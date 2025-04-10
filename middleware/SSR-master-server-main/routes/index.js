@@ -24,6 +24,7 @@ router.get('/record', function(req, res, next) {
                 "humedad": req.query.humedad,
                 "co2": req.query.co2,
                 "volatiles": req.query.volatiles};
+
   cliente_mqtt.publish("node/"+ req.query.id_nodo , JSON.stringify(datos));
 });
 
@@ -43,26 +44,14 @@ router.post("/record", function(peticion, respuesta) {
   var descifrado = descifrador.update(cifradoBuffer) + descifrador.final()
 
   var json = JSON.parse(descifrado)
-  console.log(json)
 
-  var now = new Date();
-  var logfile_name = __dirname+'/../public/logs/' +json.id+ "-"+ now.getFullYear() + "-"+ now.getMonth() + "-" + now.getDate() +'.csv';
+  var datos = { "id": json.id,
+                "temperatura": json.temperatura,
+                "humedad": json.humedad,
+                "co2": json.co2,
+                "volatiles": json.volatiles};
 
-  fs.stat(logfile_name, function(err, stat) {
-    if(err == null) {
-        console.log('File %s exists', logfile_name);
-        let content = json.id+';'+now.getTime()+";"+json.temperatura+";"+json.humedad+";"+json.co2+";"+json.volatiles+"\r\n";
-        append2file(logfile_name, content);
-      
-    } else if(err.code === 'ENOENT') {
-        // file does not exist
-        let content ='id_nodo; timestamp; temperatura; humedad; CO2; volatiles\r\n'+json.id+';'+now.getTime()+";"+json.temperatura+";"+json.humedad+";"+json.co2+";"+json.volatiles+"\r\n";
-        append2file(logfile_name, content);
-    
-    } else {
-        console.log('Some other error: ', err.code);
-    }
-  });
+  cliente_mqtt.publish("node/"+ req.query.id_nodo , JSON.stringify(datos));
 
   respuesta.status(200).send("")
 })
