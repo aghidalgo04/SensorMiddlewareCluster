@@ -29,26 +29,5 @@ app.use('/users', usersRouter);
 app.use('/logs', serveIndex(path.join(__dirname, 'public/logs'))); // shows you the file list
 app.use('/logs', express.static(path.join(__dirname, 'public/logs'))); // serve the actual files
 
-//to include images
-// app.use('/images', express.static('images'));
-
-// catch 404 and forward to error handler
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-let port = process.argv[2]
-console.log("Usando puerto " + port)
-
-app.listen(port, () => {
-  console.log(`Server is running`);
-});
 
 module.exports = app;

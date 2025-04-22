@@ -25,11 +25,8 @@ cliente_mqtt.on("connect", () => {
   });
 })
 
-console.log(date.format(new Date(), "YYYY-MM-DD hh:mm:ss"))
-
 
 cliente_mqtt.on("message", (topic, message) => {
-  console.log(topic)
   var datos = JSON.parse(message.toString())
 
   cliente_bbdd.query({
