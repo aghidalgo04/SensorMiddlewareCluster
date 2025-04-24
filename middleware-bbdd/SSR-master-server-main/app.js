@@ -22,6 +22,29 @@ cliente_mqtt.on("connect", () => {
   });
 })
 
+// var fecha = new Date();
+
+// for(var i = 0; i < 2000; i++){
+// 	var id = Math.floor(Math.random() * 10);
+// 	var temperatura = Math.random() * 50;
+// 	var humedad = Math.random() * 100;
+// 	var co2 = Math.random() * 1000;
+// 	var volatiles = Math.random() * 1000;
+// 	fecha = new Date(fecha.getTime() + 30000);
+	
+
+	// cliente_bbdd.query({
+	// 	sql: "INSERT INTO info (id, temperatura, humedad, co2, volatiles, fecha) VALUES (?, ?, ?, ?, ?, ?);",
+	// 	values: [id, temperatura, humedad, co2, volatiles, date.format(fecha, "YYYY-MM-DD hh:mm:ss")]
+	//   },
+	//   (error, results, fields) => {
+	// 	if(error) {
+	// 	  console.log(error);
+	// 	}
+	//   }
+	// );
+// }
+
 
 cliente_mqtt.on("message", (topic, message) => {
   var datos = JSON.parse(message.toString())
