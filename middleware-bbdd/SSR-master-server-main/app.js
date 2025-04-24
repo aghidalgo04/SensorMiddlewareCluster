@@ -1,33 +1,39 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var serveIndex = require('serve-index');
-var crypto = require('crypto');
-var { Buffer } = require('node:buffer');
+var mqtt = require('mqtt');
+var mysql = require('mysql');
+var date = require('date-and-time')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var cliente_mqtt = mqtt.connect("http://10.100.0.119:1883");
+var cliente_bbdd = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "root",
+  database: "sensor_info"
+});
 
-var app = express();
+cliente_bbdd.connect();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-app.use(express.raw())
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/logs', serveIndex(path.join(__dirname, 'public/logs'))); // shows you the file list
-app.use('/logs', express.static(path.join(__dirname, 'public/logs'))); // serve the actual files
+cliente_mqtt.on("connect", () => {
+  cliente_mqtt.subscribe("#", (err) => {
+	if(err) {
+	  console.log("Error al suscribirse");
+	  process.exit(1);
+	}
+	console.log("Suscrito");
+  });
+})
 
 
-module.exports = app;
+cliente_mqtt.on("message", (topic, message) => {
+  var datos = JSON.parse(message.toString())
+
+  cliente_bbdd.query({
+	  sql: "INSERT INTO info (id, temperatura, humedad, co2, volatiles, fecha) VALUES (?, ?, ?, ?, ?, ?);",
+	  values: [datos.id, datos.temperatura, datos.humedad, datos.co2, datos.volatiles, date.format(new Date(), "YYYY-MM-DD hh:mm:ss")]
+	},
+	(error, results, fields) => {
+	  if(error) {
+		console.log(error);
+	  }
+	}
+  );
+});
