@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
-var requestStats = require("request-stats")
+var fs = require('node:fs');
 
 var crypto = require('crypto');
 var { Buffer } = require('node:buffer');
@@ -9,11 +8,28 @@ var mqtt = require('mqtt');
 
 var cliente_mqtt = mqtt.connect("http://10.100.0.119:1883");
 
+var descripcion = "";
+
+fs.readFile("descripcion.xml", "utf8", (err, data) => {
+  if(err) {
+    console.error(err);
+    return;
+  }
+  descripcion = data;
+})
 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Data-Logger' });
+  
+  if(req.query.wadl == '')
+  {
+    res.status(200).send(descripcion);
+  } else {
+    res.render('index', { title: 'Data-Logger' });
+  }
+
+  
 });
 
 router.get('/record', function(req, res, next) {
@@ -55,12 +71,5 @@ router.post("/record", function(peticion, respuesta) {
 
   respuesta.status(200).send("")
 })
-
-function append2file (file2append, content){
-	fs.appendFile(file2append, content, function (err) {
-    if (err) throw err;
-    console.log("Saving: "+content+" in: "+file2append);
-});
-}
 
 module.exports = router;
