@@ -1,0 +1,33 @@
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://wadl.dev.java.net/2009/02 wadl.xsd"
+    xmlns:tns="urn:yahoo:yn" xmlns:yn="urn:yahoo:yn" xmlns:ya="urn:yahoo:api"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://wadl.dev.java.net/2009/02">
+
+    <resources base="http://10.100.0.119:5000/">
+        <resource path="media_co2">
+            <method name="GET" id="media_co2">
+                <request>
+                    <param name="fecha_inicio" type="xsd:int" style="query" required="false"/>
+                    <param name="fecha_final" type="xsd:int" style="query" required="false"/>
+                </request>
+                <response status="200">
+                    <representation mediaType="text/plain"/>
+                </response>
+            </method>
+        </resource>
+
+        <resource path="fecha_co2_alto">
+            <method name="GET" id="fecha_co2_alto">
+                <request>
+                    <param name="valor_co2" type="xsd:decimal" style="query" required="false"/>
+                </request>
+                <response status="200">
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+        </resource>
+    </resources>
+</application>
+
+    

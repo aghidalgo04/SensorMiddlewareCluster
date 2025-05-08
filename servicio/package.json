@@ -1,0 +1,22 @@
+{
+  "name": "data-logger",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "date-and-time": "^3.6.0",
+    "mysql": "^2.18.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.17.0",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "nodemon": "^3.1.9",
+    "request-stats": "^3.0.0",
+    "serve-index": "^1.9.1",
+    "mqtt": "^5.10.4"
+  }
+}
