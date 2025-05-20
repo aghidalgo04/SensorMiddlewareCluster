@@ -7,6 +7,8 @@ tmux new-session -d -s start
 tmux split-window -t start -h
 tmux select-pane -t 0
 tmux split-window -t start -v
+tmux select-pane -t 2
+tmux split-window -t start -v
 
 tmux select-pane -t 0
 tmux send 'cd middleware/SSR-master-server-main' ENTER
@@ -19,6 +21,10 @@ tmux send 'node app.js 3001' ENTER
 tmux select-pane -t 2
 tmux send 'cd middleware-bbdd/SSR-master-server-main' ENTER
 tmux send 'node app.js' ENTER
+
+tmux select-pane -t 3
+tmux send 'cd servicio' ENTER
+tmux send 'node app.js 4000' ENTER
 
 systemctl restart haproxy mosquitto
 
