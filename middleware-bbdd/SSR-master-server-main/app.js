@@ -22,9 +22,9 @@ cliente_mqtt.on("connect", () => {
   });
 })
 
-// var fecha = new Date();
+// var fecha = new Date(new Date().getTime() - 5 * 24 * 60 * 60 * 1000);
 
-// for(var i = 0; i < 2000; i++){
+// for(var i = 0; i < 20000; i++){
 // 	var id = Math.floor(Math.random() * 10);
 // 	var temperatura = Math.random() * 50;
 // 	var humedad = Math.random() * 100;
@@ -33,22 +33,23 @@ cliente_mqtt.on("connect", () => {
 // 	fecha = new Date(fecha.getTime() + 30000);
 	
 
-	// cliente_bbdd.query({
-	// 	sql: "INSERT INTO info (id, temperatura, humedad, co2, volatiles, fecha) VALUES (?, ?, ?, ?, ?, ?);",
-	// 	values: [id, temperatura, humedad, co2, volatiles, date.format(fecha, "YYYY-MM-DD hh:mm:ss")]
-	//   },
-	//   (error, results, fields) => {
-	// 	if(error) {
-	// 	  console.log(error);
-	// 	}
-	//   }
-	// );
+// 	cliente_bbdd.query({
+// 		sql: "INSERT INTO info (id, temperatura, humedad, co2, volatiles, fecha) VALUES (?, ?, ?, ?, ?, ?);",
+// 		values: [id, temperatura, humedad, co2, volatiles, date.format(fecha, "YYYY-MM-DD hh:mm:ss")]
+// 	  },
+// 	  (error, results, fields) => {
+// 		if(error) {
+// 		  console.log(error);
+// 		}
+// 	  }
+// 	);
 // }
 
 
 cliente_mqtt.on("message", (topic, message) => {
   var datos = JSON.parse(message.toString())
 
+  console.log("Datos recibidos de nodo " + datos.id);
   cliente_bbdd.query({
 	  sql: "INSERT INTO info (id, temperatura, humedad, co2, volatiles, fecha) VALUES (?, ?, ?, ?, ?, ?);",
 	  values: [datos.id, datos.temperatura, datos.humedad, datos.co2, datos.volatiles, date.format(new Date(), "YYYY-MM-DD hh:mm:ss")]
