@@ -27,83 +27,73 @@ The system prioritizes security through several layers:
 -   **IP Whitelisting**: Access to the load balancer and middleware is restricted to a configured list of allowed IP addresses.
 -   **Rate Limiting**: The Personal Service implements a Leaky Bucket algorithm to prevent abuse and manage traffic spikes.
 
-## Prerequisites
+## Usage Guide
 
-Before running the project, ensure you have the following installed:
+To use the project, follow these simple steps:
 
--   Git
--   A Linux-based environment (or WSL on Windows)
--   Basic tools: `curl` and `mosquitto-clients` (for testing)
-
-## Getting Started and Setup
-
-Follow these steps to deploy the system locally.
-
-### 1. Clone the Repository
-
-Download the project source code:
+### Step 1: Download
+Clone the project to your desired directory using the following command:
 
 ```bash
-git clone [https://github.com/aghidalgo04/SensorMiddlewareCluster.git](https://github.com/aghidalgo04/SensorMiddlewareCluster.git)
-cd SensorMiddlewareCluster
+git clone [https://gitlab.etsisi.upm.es/bt0106/ra.git](https://gitlab.etsisi.upm.es/bt0106/ra.git)
 ```
 
-### 2. Launch the System
+### Step 2: Access Directory
+Enter the project folder:
 
-The project includes a shell script that automates the initialization of all services. Run the following command from the project root:
+```bash
+cd ra
+```
+
+### Step 3: Execution
+Once inside the folder, execute the startup script:
 
 ```bash
 sudo sh start.sh
 ```
 
-### 3. Verify Deployment
+### System Status
+Once executed, the project will be running, and you will see a TMux terminal divided into four panes:
 
-After running the start script, the system will launch a TMux session divided into four panes:
+* **Left (2 panes):** These belong to the sensor middleware, running on ports **3000** and **3001**.
+* **Top Right:** This pane belongs to the database middleware.
+* **Bottom Right:** This executes the service that connects the client to the database and enables the use of the implemented requests.
 
--   **Left Panes**: Sensor Middleware instances running on ports 3000 and 3001.
--   **Top Right Pane**: Database Middleware.
--   **Bottom Right Pane**: Personal Service running on port 4000.
+---
 
-The Load Balancer (HAProxy) will be listening on port 5000.
+### Manual Testing & Commands
+All components can also be tested individually once all services have been started.
 
-## Usage
-
-You can interact with the system components using command-line tools.
-
-### Simulating Sensor Data
-
-To send a data packet (simulating a sensor), use `curl` to target the load balancer. Note that in a real scenario, this payload should be encrypted, but for testing the endpoint:
+#### Test Sensor Middlewares
+To send a record, use the following command:
 
 ```bash
-curl http://10.100.0.119:5000/record?id_nodo={ID}&temperatura={VAL}&humedad={VAL}&co2={VAL}&volatiles={VAL}"
+curl "http://10.100.0.119:5000/record?id_nodo={ID}&temperatura={NUM}&humedad={NUM}&co2={NUM}&volatiles={NUM}"
 ```
 
-### MQTT Interaction
-
-You can subscribe to the broker to observe the data flow:
+#### MQTT Subscription
+To subscribe to a "channel":
 
 ```bash
-mosquitto_sub -h 10.100.0.119 -p 1883 -t node/#
+mosquitto_sub -h 10.100.0.119:1883 -t node/#
 ```
 
-To manually publish a message to a specific node topic:
+#### MQTT Publishing
+To publish to a "channel":
 
 ```bash
-mosquitto_pub -h 10.100.0.119 -p 1883 -t node/{ID} -m "{MESSAGE}"
+mosquitto_pub -h 10.100.0.119:1883 -t node/{ID} -m {MENSAJE}
 ```
 
-### Personal Service
+#### Test Personal Service
+To test the personal service endpoints:
 
-The Personal Service provides specific data insights. You can query it using standard GET requests:
-
-**Get Average CO2:**
-
+**Get CO2 Average:**
 ```bash
-curl "http://10.100.0.119:4000/media_co2?fecha_inicio={TIMESTAMP}&fecha_fin={TIMESTAMP}"
+curl "http://10.100.0.119:4000/media_co2?fecha_inicio={UNIX}&fecha_fin={UNIX}"
 ```
 
-**Get Date of Highest CO2:**
-
+**Get High CO2 Date:**
 ```bash
-curl "http://10.100.0.119:4000/fecha_co2_alto?fecha_inicio={TIMESTAMP}&fecha_fin={TIMESTAMP}"
+curl "http://10.100.0.119:4000/fecha_co2_alto?fecha_inicio={UNIX}&fecha_fin={UNIX}"
 ```
