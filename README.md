@@ -19,6 +19,10 @@ The system consists of the following components:
 7.  **Visualization**: Grafana dashboard connected to the database.
 8.  **Personal Service**: A REST API that queries the database for statistics (e.g., average CO2), protected by a Leaky Bucket rate limiter.
 
+<p align="center">
+  <img src="https://github.com/aghidalgo04/SensorMiddlewareCluster/blob/main/docs/ArquitectureScheme.png" alt="Arquitecture Scheme">
+</p>
+
 ## Security Features
 
 The system prioritizes security through several layers:
